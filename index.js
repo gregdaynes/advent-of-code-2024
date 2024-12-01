@@ -134,3 +134,28 @@ export function day1pt2alt3 (input) {
 
   return similarity
 }
+
+
+export function day1pt2alt4 (input) {
+  const regex = /(?<left>\d+)\s+(?<right>\d+)$/gm
+
+  const Left = []
+  const Right = {}
+
+  ;[...input.matchAll(regex)]
+    .forEach(({  groups: { left, right } }) => {
+      Left.push(left)
+
+      const value = Right[right] ?? 0
+      Right[right] = value + 1
+    })
+
+  let similarity = 0
+
+  for (const left of Left) {
+    const occurrances = Right[left] ?? 0
+    similarity += left * occurrances
+  }
+
+  return similarity
+}
