@@ -22,3 +22,26 @@ export function day1 (input) {
   return distanceAcc
 }
 
+export function day1alt (input) {
+  const regex = /(?<left>\d+)\s+(?<right>\d+)/gm
+
+  const Left = []
+  const Right = []
+
+  ;[...input.matchAll(regex)]
+    .forEach(({  groups: { left, right } }) => {
+      Left.push(left)
+      Right.push(right)
+    })
+
+  Left.sort()
+  Right.sort()
+
+  let distanceAcc = 0
+
+  for (const i in Left) {
+    distanceAcc = distanceAcc + Math.abs(Left[i] - Right[i])
+  }
+
+  return distanceAcc
+}
