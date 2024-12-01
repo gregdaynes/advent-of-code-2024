@@ -69,3 +69,16 @@ export function day1pt2 (input) {
 
   return similarity
 }
+
+export function day1pt2alt (input) {
+  const regex = /(?<left>\d+)\s+(?<right>\d+)/gm
+
+  return [...input.matchAll(regex)]
+    .reduce((acc, current, i) => {
+      const [_, left] = current
+      const rightMatch = new RegExp("\\d+\\W+(" + left + ")$", "gm")
+      const count = [...input.matchAll(rightMatch)].length
+
+      return acc + left * count
+    }, 0)
+}
