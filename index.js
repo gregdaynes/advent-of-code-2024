@@ -1,4 +1,4 @@
-export function day1 (input) {
+export function day1pt1 (input) {
   const pairs = input.split('\n')
 
   const leftCollection = []
@@ -6,6 +6,8 @@ export function day1 (input) {
 
   for (const pair of pairs) {
     const [left, right] = pair.split('   ')
+    if (!left || !right) continue
+
     leftCollection.push(left)
     rightCollection.push(right)
   }
@@ -22,7 +24,7 @@ export function day1 (input) {
   return distanceAcc
 }
 
-export function day1alt (input) {
+export function day1pt1alt (input) {
   const regex = /(?<left>\d+)\s+(?<right>\d+)/gm
 
   const Left = []
