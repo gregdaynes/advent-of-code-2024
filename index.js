@@ -47,3 +47,25 @@ export function day1pt1alt (input) {
 
   return distanceAcc
 }
+
+export function day1pt2 (input) {
+  const regex = /(?<left>\d+)\s+(?<right>\d+)/gm
+
+  const Left = []
+  const Right = []
+
+  ;[...input.matchAll(regex)]
+    .forEach(({  groups: { left, right } }) => {
+      Left.push(left)
+      Right.push(right)
+    })
+
+  let similarity = 0
+
+  for (const left of Left) {
+    const occurrances = Right.filter((right) => left === right).length
+    similarity += left * occurrances
+  }
+
+  return similarity
+}

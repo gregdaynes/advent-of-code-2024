@@ -24,4 +24,14 @@ test('day one', async (t) => {
       assert.equal(day1pt1alt(inputFile), 1941353)
     })
   })
+
+  await t.test('part 2', async (t) => {
+    await t.test('left 3 appears 3 times in the right column. 3 * 3 = 9', () => {
+      assert.equal(day1pt2(input), 31)
+    })
+
+    await t.test('left 3 appears 3 times in the right column. 3 * 3 = 9', () => {
+      assert.equal(day1pt2(inputFile), 22539317)
+    })
+  })
 })
