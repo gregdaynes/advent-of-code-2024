@@ -1,6 +1,6 @@
 import test from "node:test"
 import assert from "node:assert/strict"
-import { day1pt1, day1pt1alt, day1pt2, day1pt2alt } from './index.js'
+import { day1pt1, day1pt1alt, day1pt2, day1pt2alt, day1pt2alt2 } from './index.js'
 import { readFileSync } from 'node:fs'
 
 test('day one', async (t) => {
@@ -30,16 +30,24 @@ test('day one', async (t) => {
       assert.equal(day1pt2(input), 31)
     })
 
-    await t.test('left 3 appears 3 times in the right column. 3 * 3 = 9', () => {
+    await t.test('alt: left 3 appears 3 times in the right column. 3 * 3 = 9', () => {
       assert.equal(day1pt2alt(input), 31)
+    })
+
+    await t.test('alt2: left 3 appears 3 times in the right column. 3 * 3 = 9', () => {
+      assert.equal(day1pt2alt2(input), 31)
     })
 
     await t.test('left 3 appears 3 times in the right column. 3 * 3 = 9', () => {
       assert.equal(day1pt2(inputFile), 22539317)
     })
 
-    await t.test('left 3 appears 3 times in the right column. 3 * 3 = 9', () => {
+    await t.test('alt: left 3 appears 3 times in the right column. 3 * 3 = 9', () => {
       assert.equal(day1pt2alt(inputFile), 22539317)
+    })
+
+    await t.test('alt2: left 3 appears 3 times in the right column. 3 * 3 = 9', () => {
+      assert.equal(day1pt2alt2(inputFile), 22539317)
     })
   })
 })
