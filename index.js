@@ -76,7 +76,7 @@ export function day1pt2alt (input) {
   return [...input.matchAll(regex)]
     .reduce((acc, current, i) => {
       const [_, left] = current
-      const rightMatch = new RegExp("\\d+\\W+(" + left + ")$", "gm")
+      const rightMatch = new RegExp("\\W(" + left + ")$", "gm")
       const count = [...input.matchAll(rightMatch)].length
 
       return acc + left * count
