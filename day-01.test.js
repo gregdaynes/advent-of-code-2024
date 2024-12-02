@@ -1,6 +1,6 @@
 import test from "node:test"
 import assert from "node:assert/strict"
-import { day1pt1, day1pt1alt, day1pt2, day1pt2alt, day1pt2alt2, day1pt2alt3, day1pt2alt4 } from './index.js'
+import { day1pt1, day1pt1alt, day1pt2, day1pt2alt, day1pt2alt2, day1pt2alt3, day1pt2alt4 } from './day-01.js'
 import { readFileSync } from 'node:fs'
 
 test('day one', async (t) => {
