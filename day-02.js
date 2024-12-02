@@ -38,7 +38,7 @@ export function p1a (input) {
       }
     }
   }
-  console.log(performance.now() - start)
+  //console.log(performance.now() - start)
 
   return reports
 }
@@ -47,178 +47,79 @@ export function p2a (input) {
   const reports = input.split('\n')
 
   function isValid (a, b) {
-    if (a < b && b <= a + 3) return true // valid ascend
-    if (a > b && b >= a - 3) return true // valid decend
+    if (a < b && b <= a + 3) return true
+    if (a > b && b >= a - 3) return true
     return false
   }
 
   for (const report in reports) {
-    console.log('======================')
-    console.log(`report ${report}:`, reports[report])
     const levels = reports[report].split(' ').map(Number)
-
-    let skipped
     let safe = true
 
-    // intentionally skip first and last
-    for (let i = 1; i < levels.length - 1; i++) {
-      console.log({ p: levels[i - 1], c: levels[i], n: levels[i+1] })
+    let arrays = [levels]
 
-      const p = i - 1
-      const c = i
-      const n = i + 1
-
-      if (skipped) {
-        if (skipped === p) {
-          console.log('p previously skipped')
-        }
-
-        if (skipped === c) {
-          console.log('c previously skipped')
-
-        }
-
-        if (skipped === n) {
-          console.log('n previously skipped')
-        }
-      }
-
-      const previousCurrent = isValid(levels[i - 1], levels[i])
-      const currentNext = isValid(levels[i], levels[i+1])
-      const previousNext = isValid(levels[i - 1], levels[i+1])
-
-      if (previousCurrent && currentNext) {
-        console.log({ previousCurrent, currentNext, previousNext, skipped })
-        console.log('🟢')
-
-        continue;
-      }
-
-      if (!previousCurrent && !currentNext) {
-        console.log({ previousCurrent, currentNext, previousNext, skipped })
-
-        if (skipped === undefined) {
-          skipped = i
-          console.log('ccc', 'skipping', i)
-          continue;
-        }
-
-        safe = false
-        break;
-      }
-
-      if (!previousCurrent && !currentNext && previousNext) {
-        console.log({ previousCurrent, currentNext, previousNext, skipped })
-
-        if (skipped === undefined) {
-          skipped = i
-          console.log('aa', 'skipping', i)
-          continue;
-        }
-
-        safe = false
-        break;
-      }
-
-      if (!previousCurrent && currentNext && previousNext) {
-        console.log({ previousCurrent, currentNext, previousNext, skipped })
-
-        if (skipped === undefined) {
-          skipped = i - 1
-          console.log('bb', 'skipping', i - 1)
-          continue;
-        }
-
-
-        safe = false
-        break;
-      }
-
-      if (previousCurrent && !currentNext) {
-         console.log({ previousCurrent, currentNext, previousNext, skipped })
-
-        if (skipped === undefined) {
-          skipped = i + 1
-          console.log('xx', 'skipping', i + 1)
-          continue;
-        }
-
-        safe = false
-        break;
-      }
-
-
-
-      if (!previousCurrent && !previousNext) {
-        console.log({ previousCurrent, currentNext, previousNext, skipped })
-
-        if (skipped === undefined) {
-          skipped = i - 1
-          console.log('yy', 'skipping', i - 1)
-          continue;
-        }
-
-
-        safe = false
-        break;
-      }
-
-      if (!previousCurrent && !currentNext) {
-        console.log({ previousCurrent, currentNext, previousNext, skipped })
-
-        if (skipped === undefined) {
-          skipped = i - 1
-          console.log('zz', 'skipping', i - 1)
-          continue;
-        }
-
-        safe = false
-        break;
-      }
-
-      console.log('breakout', { previousCurrent, currentNext, previousNext, skipped })
+    for (const i in levels) {
+      const levelsClone = [...levels]
+      levelsClone.splice(i, 1)
+      arrays.push(levelsClone)
     }
 
-    if (safe === false) {
-      console.log('unsafe')
-      reports[report] = false
-      continue;
-    }
+    arrays = arrays.map(levels => {
+      let levelsInvalid = 0
 
+      for (let i = 0; i < levels.length; i++) {
+        if (!levels[i + 1]) continue;
+        const valid = isValid(levels[i], levels[i+1])
 
-    let reportWithoutSkipped = reports[report].split(' ').map(Number)
-    reportWithoutSkipped[skipped] = undefined
-    reportWithoutSkipped = reportWithoutSkipped.filter(Boolean)
-    console.log(reports[report], reportWithoutSkipped.filter(Boolean))
-
-    let direction
-
-    for (let i = 0; i < reportWithoutSkipped.length; i++) {
-      const c = i;
-      const n = i + 1;
-
-      if (!n) {
-        continue;
+        if (!valid) {
+          levelsInvalid += 1
+          break;
+        }
       }
 
-      if (!direction) {
-        direction = c < n ? 1 : -1
+      let incStable = true
+      for (let i = 0; i < levels.length; i++) {
+        const c = levels[i]
+        const n = levels[i + 1]
+        if (!n) continue;
+
+        if (c < n && n <= c + 3) {
+
+        } else {
+          incStable = false
+        }
       }
 
-      if (direction === 1 && c < n) continue
-      if (direction === -1 && c > n) continue
+      let decStable = true
+      for (let i = 0; i < levels.length; i++) {
+        const c = levels[i]
+        const n = levels[i + 1]
+        if (!n) continue;
 
+        if (c > n && n >= c - 3) {
+
+        } else {
+          decStable = false
+        }
+      }
+
+      if (!incStable && !decStable) {
+        levelsInvalid += 1
+      }
+
+      return levelsInvalid === 0
+    })
+
+    //we need at least 1 pass
+    if (arrays.filter(Boolean).length === 0) {
       safe = false
-      break;
     }
-
-    console.log('xxxxxxxxxxxxxxxxxxxx')
-    console.log('direction', direction, safe)
 
     reports[report] = safe
   }
 
-  return reports
+  return reports.reduce((acc, item) => {
+    if (item === true) return acc + 1
+    return acc
+  }, 0)
 }
-
-
