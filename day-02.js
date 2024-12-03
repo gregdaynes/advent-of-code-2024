@@ -46,9 +46,25 @@ export function p1a (input) {
 export function p2a (input) {
   const reports = input.split('\n')
 
-  function isValid (a, b) {
-    if (a < b && b <= a + 3) return true
-    if (a > b && b >= a - 3) return true
+  function isValid (levels) {
+    let inc = true
+    let dec = true
+
+    for (let i = 0; i < levels.length - 1; i++) {
+      const c = levels[i]
+      const n = levels[i + 1]
+
+      if (!(c < n && n <= c + 3)) {
+        inc = false
+      }
+
+      if (!(c > n && n >= c - 3)) {
+        dec = false
+      }
+    }
+
+    if (inc || dec) return true
+
     return false
   }
 
@@ -56,70 +72,21 @@ export function p2a (input) {
     const levels = reports[report].split(' ').map(Number)
     let safe = true
 
-    let arrays = [levels]
-
+    let arrays = []
     for (const i in levels) {
       const levelsClone = [...levels]
       levelsClone.splice(i, 1)
       arrays.push(levelsClone)
     }
 
-    arrays = arrays.map(levels => {
-      let levelsInvalid = 0
+    arrays = arrays.map(isValid).filter(Boolean)
 
-      for (let i = 0; i < levels.length; i++) {
-        if (!levels[i + 1]) continue;
-        const valid = isValid(levels[i], levels[i+1])
-
-        if (!valid) {
-          levelsInvalid += 1
-          break;
-        }
-      }
-
-      let incStable = true
-      for (let i = 0; i < levels.length; i++) {
-        const c = levels[i]
-        const n = levels[i + 1]
-        if (!n) continue;
-
-        if (c < n && n <= c + 3) {
-
-        } else {
-          incStable = false
-        }
-      }
-
-      let decStable = true
-      for (let i = 0; i < levels.length; i++) {
-        const c = levels[i]
-        const n = levels[i + 1]
-        if (!n) continue;
-
-        if (c > n && n >= c - 3) {
-
-        } else {
-          decStable = false
-        }
-      }
-
-      if (!incStable && !decStable) {
-        levelsInvalid += 1
-      }
-
-      return levelsInvalid === 0
-    })
-
-    //we need at least 1 pass
-    if (arrays.filter(Boolean).length === 0) {
-      safe = false
-    }
+    //we need at least 1 valid set of levels
+    if (!arrays.length) safe = false
 
     reports[report] = safe
   }
 
-  return reports.reduce((acc, item) => {
-    if (item === true) return acc + 1
-    return acc
-  }, 0)
+  // return made safe report count
+  return reports.reduce((acc, item) => item ? acc + 1 : acc, 0)
 }
