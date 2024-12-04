@@ -110,3 +110,58 @@ export function p1a (input) {
   return count
 }
 
+export function p2a (input) {
+  // convert input into 2d array.
+  const input2dArray = input.split('\n').map(row => row.split(''))
+
+  const aMap = []
+  for (const y in input2dArray) {
+    for (const x in input2dArray[y]) {
+      if (input2dArray[y][x] === 'A') {
+        aMap.push([Number(y), Number(x)])
+      }
+    }
+  }
+
+  const matches = []
+  for (const [aY, aX] of aMap) {
+    // tl tr br bl
+    const quadrants = [
+      [aY - 1, aX - 1],
+      [aY - 1, aX + 1],
+      [aY + 1, aX + 1],
+      [aY + 1, aX - 1],
+    ]
+
+    const results = []
+    let letters = ''
+
+    for (const [y, x] of quadrants) {
+      const charAtCoord = input2dArray[y]?.[x]
+
+      if (['M', 'S'].includes(charAtCoord)) {
+        letters += charAtCoord
+      }
+    }
+
+    if (letters.length === 4) {
+      results.push(letters)
+    }
+
+
+    for (const possibleMatch of results) {
+      switch (possibleMatch) {
+        case 'MMSS':
+        case 'MSSM':
+        case 'SSMM':
+        case 'SMMS':
+          matches.push(possibleMatch)
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+  return matches.length
+}
