@@ -1,22 +1,37 @@
+function fn(input, [y,x]) {
+  const matrix = [
+    [[y,x], [y-1,x],   [y-2,x],   [y-3,x]  ], // verticalBackwards
+    [[y,x], [y-1,x+1], [y-2,x+2], [y-3,x+3]], // upright
+    [[y,x], [y,x+1],   [y,x+2],   [y,x+3]  ], // horizontal
+    [[y,x], [y+1,x+1], [y+2,x+2], [y+3,x+3]], // downright
+    [[y,x], [y+1,x],   [y+2,x],   [y+3,x]  ], // vertical
+    [[y,x], [y+1,x-1], [y+2,x-2], [y+3,x-3]], // downleft
+    [[y,x], [y,x-1],   [y,x-2],   [y,x-3]  ], // horizontalBackwards
+    [[y,x], [y-1,x-1], [y-2,x-2], [y-3,x-3]], // upleft
+  ]
+
+  let count = 0
+  for (const lookups of matrix) {
+    let word = []
+
+    for (const [y, x] of lookups) {
+      word += input[y]?.[x]
+    }
+
+    if (word === 'XMAS') {
+      count++
+    }
+  }
+
+  return count
+}
+
 export function p1a (input) {
   const input2dArray = parseInputToArray(input)
   const map = findallLetterCoordiates(input2dArray, 'X')
 
-  const fns = [
-    verticalBackwards,
-    upright,
-    horizontal,
-    downright,
-    vertical,
-    downleft,
-    horizontalBackwards,
-    upleft
-  ]
-
   const count = map.reduce((acc, coord) => {
-    fns.forEach(fn => fn(input2dArray, coord) && acc++)
-
-    return acc
+    return acc += fn(input2dArray, coord)
   }, 0)
 
   return count
@@ -85,108 +100,4 @@ function findallLetterCoordiates (input2dArray, letter) {
   }
 
   return map
-}
-
-function verticalBackwards(input, [y,x]) {
-  const lookups = [[y,x], [y-1,x], [y-2,x], [y-3,x]]
-
-  let word = ''
-  for (const [y, x] of lookups) {
-    word += input[y]?.[x]
-  }
-
-  if (word === 'XMAS') {
-    return word
-  }
-}
-
-function upright(input, [y,x]) {
-  const lookups = [[y,x], [y-1,x+1], [y-2,x+2], [y-3,x+3]]
-
-  let word = ''
-  for (const [y, x] of lookups) {
-    word += input[y]?.[x]
-  }
-
-  if (word === 'XMAS') {
-    return word
-  }
-}
-
-function horizontal(input, [y,x]) {
-  const lookups = [[y,x], [y,x+1], [y,x+2], [y,x+3]]
-
-  let word = ''
-  for (const [y, x] of lookups) {
-    word += input[y]?.[x]
-  }
-
-  if (word === 'XMAS') {
-    return word
-  }
-}
-
-function downright(input, [y,x]) {
-  const lookups = [[y,x], [y+1,x+1], [y+2,x+2], [y+3,x+3]]
-
-  let word = ''
-  for (const [y, x] of lookups) {
-    word += input[y]?.[x]
-  }
-
-  if (word === 'XMAS') {
-    return word
-  }
-}
-
-function vertical(input, [y,x]) {
-  const lookups = [[y,x], [y+1,x], [y+2,x], [y+3,x]]
-
-  let word = ''
-  for (const [y, x] of lookups) {
-    word += input[y]?.[x]
-  }
-
-  if (word === 'XMAS') {
-    return word
-  }
-}
-
-function downleft(input, [y,x]) {
-  const lookups = [[y,x], [y+1,x-1], [y+2,x-2], [y+3,x-3]]
-
-  let word = ''
-  for (const [y, x] of lookups) {
-    word += input[y]?.[x]
-  }
-
-  if (word === 'XMAS') {
-    return word
-  }
-}
-
-function horizontalBackwards(input, [y,x]) {
-  const lookups = [[y,x], [y,x-1], [y,x-2], [y,x-3]]
-
-  let word = ''
-  for (const [y, x] of lookups) {
-    word += input[y]?.[x]
-  }
-
-  if (word === 'XMAS') {
-    return word
-  }
-}
-
-function upleft(input, [y,x]) {
-  const lookups = [[y,x], [y-1,x-1], [y-2,x-2], [y-3,x-3]]
-
-  let word = ''
-  for (const [y, x] of lookups) {
-    word += input[y]?.[x]
-  }
-
-  if (word === 'XMAS') {
-    return word
-  }
 }
