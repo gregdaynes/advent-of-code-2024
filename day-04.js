@@ -2,24 +2,27 @@ export function p1a (input) {
   const input2dArray = parseInputToArray(input)
   const map = findallLetterCoordiates(input2dArray, 'X')
 
-  const validWords = []
-  for (const coord of map) {
-    const validWord = [
-      verticalBackwards,
-      upright,
-      horizontal,
-      downright,
-      vertical,
-      downleft,
-      horizontalBackwards,
-      upleft
-    ].map(fn => fn(input2dArray, coord))
-    .filter(Boolean)
+  const fns = [
+    verticalBackwards,
+    upright,
+    horizontal,
+    downright,
+    vertical,
+    downleft,
+    horizontalBackwards,
+    upleft
+  ]
 
-    validWords.push(validWord)
+  let count = 0
+  for (const coord of map) {
+    fns.forEach(fn => {
+      if (fn(input2dArray, coord)) {
+        count += 1
+      }
+    })
   }
 
-  return validWords.flat().length
+  return count
 }
 
 export function p2a (input) {
