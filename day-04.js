@@ -1,4 +1,4 @@
-function fn(input, [y,x]) {
+function countValidWordsForCoord(input, [y,x]) {
   const matrix = [
     [[y,x], [y-1,x],   [y-2,x],   [y-3,x]  ], // verticalBackwards
     [[y,x], [y-1,x+1], [y-2,x+2], [y-3,x+3]], // upright
@@ -10,20 +10,15 @@ function fn(input, [y,x]) {
     [[y,x], [y-1,x-1], [y-2,x-2], [y-3,x-3]], // upleft
   ]
 
-  let count = 0
-  for (const lookups of matrix) {
-    let word = []
+  // returns count of valid words
+  return matrix.reduce((acc, coords) =>
+    acc += (wordFromCoords(input, coords) === 'XMAS' && 1), 0)
+}
 
-    for (const [y, x] of lookups) {
-      word += input[y]?.[x]
-    }
-
-    if (word === 'XMAS') {
-      count++
-    }
-  }
-
-  return count
+// returns a string of letters from coordinates, eg: XMAS
+function wordFromCoords (input, coords) {
+  // destructuring coord into [y, x] is slower than coord[0], coord[1] looups
+  return coords.reduce((acc, coord) => acc + input[coord[0]]?.[coord[1]], '')
 }
 
 export function p1a (input) {
@@ -31,7 +26,7 @@ export function p1a (input) {
   const map = findallLetterCoordiates(input2dArray, 'X')
 
   const count = map.reduce((acc, coord) => {
-    return acc += fn(input2dArray, coord)
+    return acc += countValidWordsForCoord(input2dArray, coord)
   }, 0)
 
   return count
