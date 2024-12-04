@@ -13,14 +13,11 @@ export function p1a (input) {
     upleft
   ]
 
-  let count = 0
-  for (const coord of map) {
-    fns.forEach(fn => {
-      if (fn(input2dArray, coord)) {
-        count += 1
-      }
-    })
-  }
+  const count = map.reduce((acc, coord) => {
+    fns.forEach(fn => fn(input2dArray, coord) && acc++)
+
+    return acc
+  }, 0)
 
   return count
 }
