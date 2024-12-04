@@ -22,8 +22,7 @@ function wordFromCoords (input, coords) {
 }
 
 export function p1a (input) {
-  const input2dArray = parseInputToArray(input)
-  const map = findallLetterCoordiates(input2dArray, 'X')
+  const [input2dArray, map] = parseInputToArray(input, 'X')
 
   const count = map.reduce((acc, coord) => {
     return acc += countValidWordsForCoord(input2dArray, coord)
@@ -33,8 +32,7 @@ export function p1a (input) {
 }
 
 export function p2a (input) {
-  const input2dArray = parseInputToArray(input)
-  const map = findallLetterCoordiates(input2dArray, 'A')
+  const [input2dArray, map] = parseInputToArray(input, 'A')
 
   let count = 0
   for (const [aY, aX] of map) {
@@ -66,20 +64,20 @@ export function p2a (input) {
 
 // Helper functions ---
 
-function parseInputToArray (input) {
-  return input.split('\n').map(row => row.split(''))
-}
-
-function findallLetterCoordiates (input2dArray, letter) {
+function parseInputToArray (input, target) {
   const map = []
 
-  for (const y in input2dArray) {
-    for (const x in input2dArray[y]) {
-      if (input2dArray[y][x] === letter) {
-        map.push([Number(y), Number(x)])
-      }
-    }
-  }
+  const matrix = input.split('\n').map((row, y) => {
+    const letters = row.split('')
 
-  return map
+    letters.forEach((letter, x) => {
+      if (letter === target) {
+        map.push([y, x])
+      }
+    })
+
+    return letters
+  })
+
+  return [matrix, map]
 }
