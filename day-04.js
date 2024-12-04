@@ -36,7 +36,7 @@ export function p2a (input) {
   const input2dArray = parseInputToArray(input)
   const map = findallLetterCoordiates(input2dArray, 'A')
 
-  const matches = []
+  let count = 0
   for (const [aY, aX] of map) {
     // tl tr br bl
     const quadrants = [
@@ -46,35 +46,22 @@ export function p2a (input) {
       [aY + 1, aX - 1],
     ]
 
-    const results = []
-    let letters = ''
+    const letters = quadrants.reduce((acc, coord) => {
+      return acc + input2dArray[coord[0]]?.[coord[1]]
+    }, '')
 
-    for (const [y, x] of quadrants) {
-      const charAtCoord = input2dArray[y]?.[x]
-
-      if (['M', 'S'].includes(charAtCoord)) {
-        letters += charAtCoord
-      }
-    }
-
-    if (letters.length === 4) {
-      results.push(letters)
-    }
-
-    for (const possibleMatch of results) {
-      switch (possibleMatch) {
-        case 'MMSS':
-        case 'MSSM':
-        case 'SSMM':
-        case 'SMMS':
-          matches.push(possibleMatch)
-        default:
-          break;
-      }
+    switch (letters) {
+      case 'MMSS':
+      case 'MSSM':
+      case 'SSMM':
+      case 'SMMS':
+        count++
+      default:
+        break;
     }
   }
 
-  return matches.length
+  return count
 }
 
 // Helper functions ---
