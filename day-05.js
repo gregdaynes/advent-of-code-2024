@@ -19,4 +19,64 @@ export function p1a (input) {
   // With the sample dataset, 75,29,13 have 6 applicable rules, which means 18 operations for the update.
   //
   // From the update rows that are valid against rules, find the middle page number - something like Math.floor(length / 2)
+
+  let [rules, updates] = input.split('\n\n')
+
+  rules = rules.split('\n').reduce((acc, entry) => {
+    const [page, follower] = entry.split('|')
+
+    if (!acc[page]) acc[page] = []
+    acc[page].push(Number(follower))
+
+    return acc
+  }, {})
+
+  updates = updates.split('\n').map(update => update.split(',').map(Number))
+
+  // evaluation
+
+  const validUpdates = []
+
+  for (const update of updates) {
+    let isValid = true
+
+    update:
+    for (const pageIndex in update) {
+      if (!isValid) break update
+
+      const pageNumber = update[pageIndex]
+      const applicableRules = rules[pageNumber]
+
+      if (!applicableRules || !applicableRules.length) continue update;
+
+      follower:
+      for (const follower of applicableRules) {
+        const followerIndex = update.indexOf(follower)
+
+        // follower doesn't exist in update, ignore
+        if (followerIndex === -1) continue follower
+
+        // invalid update, exit
+        if (followerIndex < pageIndex) {
+          console.log({
+            update: '❌',
+            pageNumber,
+            pageIndex,
+            applicableRules,
+            followerIndex,
+            follower,
+          })
+          isValid = false
+          break update
+        }
+      }
+    }
+
+    if (isValid) validUpdates.push(update)
+  }
+
+  return validUpdates.reduce((acc, update) => {
+    const mid = Math.floor(update.length / 2)
+    return acc += update[mid]
+  }, 0)
 }
