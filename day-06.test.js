@@ -13,9 +13,9 @@ test('day four', async t => {
       assert.equal(results, 41)
     })
 
-    //await t.skip('part 1 actual data', () => {
-    //  const results = p1a(inputFile)
-    //  assert.equal(results[0], 4996)
-    //})
+    await t.test('part 1 actual data', () => {
+      const results = p1a(inputFile)
+      assert.equal(results, 5086)
+    })
   })
 })

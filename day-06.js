@@ -19,12 +19,9 @@ export function p1a (input) {
   let ledger = new Set() // value: y,x
   let max = [area.length, area[0].length]
 
-  console.log(actor, obstructions, max)
-
   toCollision(obstructions, actor, directionVector, ledger, max)
-  console.log(ledger)
 
-  return 41
+  return ledger.size
 }
 
 // record a map of
@@ -51,43 +48,31 @@ function parseInputToArray (input, actor, obstruction) {
   return [matrix, actorCoord, obstructionCoords]
 }
 
+let i = 0
 function toCollision(obstructions, start, vector, ledger, max) {
   let blocked = false
   let cursor = start
-  let end = false
 
-  while (blocked === false) {
+  while(blocked == false) {
     const nextCursor = applyVector(vector, cursor)
-    console.log({ cursor, nextCursor })
-
     blocked = isBlocked(obstructions, nextCursor)
-    if (blocked) {
-      console.log(nextCursor, 'is blocked')
-    }
 
     if (!blocked) {
-      cursor = nextCursor
       ledger.add(`${cursor[0]},${cursor[1]}`)
+      cursor = nextCursor
     }
 
-    if (cursor[0] < 0 || cursor[0] > max[0] || cursor[1] < 0 || cursor[1] > max[1]) {
-      console.log({ cursor })
-      end = true;
-      break;
+    if (cursor[0] < 0 || cursor[0] >= max[0] || cursor[1] < 0 || cursor[1] >= max[1]) {
+      return
     }
   }
 
-  if (end) {
-    console.log('fin')
-    return;
+  if (blocked) {
+    // rotate vector 90 degrees and return
+    vector = rotateRight(vector)
   }
 
-  // rotate vector 90 degrees and return
-  vector = rotateRight(vector)
-  console.log('rotate')
-
-  console.log('do it again')
-  toCollision(obstructions, cursor, vector, ledger, max)
+  return toCollision(obstructions, cursor, vector, ledger, max)
 }
 
 function applyVector([vY, vX], [cY, cX]) {
