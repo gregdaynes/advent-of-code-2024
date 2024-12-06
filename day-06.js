@@ -14,7 +14,33 @@ export function p1a (input) {
   // 5) rotate direction vector
   // 6) repeat
 
+  const [area, actor, obstructions] = parseInputToArray(input, '^', '#')
 
+  console.log(area, actor, obstructions)
 
   return 41
+}
+
+// record a map of
+function parseInputToArray (input, actor, obstruction) {
+  const actorCoord = []
+  const obstructionCoords = []
+
+  const matrix = input.split('\n').map((row, y) => {
+    const xCoord = row.split('')
+
+    xCoord.forEach((value, x) => {
+      if (value === actor) {
+        actorCoord.push([y, x])
+      }
+
+      if (value === obstruction) {
+        obstructionCoords.push([y, x])
+      }
+    })
+
+    return xCoord
+  })
+
+  return [matrix, actorCoord, obstructionCoords]
 }
