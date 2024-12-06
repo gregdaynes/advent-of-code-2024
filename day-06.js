@@ -15,15 +15,21 @@ export function p1a (input) {
   // 6) repeat
 
   const [area, actor, obstructions] = parseInputToArray(input, '^', '#')
+  let directionVector = [-1,0]
+  let ledger = new Set() // value: y,x
+  let max = [area.length, area[0].length]
 
-  console.log(area, actor, obstructions)
+  console.log(actor, obstructions, max)
+
+  toCollision(obstructions, actor, directionVector, ledger, max)
+  console.log(ledger)
 
   return 41
 }
 
 // record a map of
 function parseInputToArray (input, actor, obstruction) {
-  const actorCoord = []
+  let actorCoord
   const obstructionCoords = []
 
   const matrix = input.split('\n').map((row, y) => {
@@ -31,7 +37,7 @@ function parseInputToArray (input, actor, obstruction) {
 
     xCoord.forEach((value, x) => {
       if (value === actor) {
-        actorCoord.push([y, x])
+        actorCoord = [y, x]
       }
 
       if (value === obstruction) {
@@ -43,4 +49,64 @@ function parseInputToArray (input, actor, obstruction) {
   })
 
   return [matrix, actorCoord, obstructionCoords]
+}
+
+function toCollision(obstructions, start, vector, ledger, max) {
+  let blocked = false
+  let cursor = start
+  let end = false
+
+  while (blocked === false) {
+    const nextCursor = applyVector(vector, cursor)
+    console.log({ cursor, nextCursor })
+
+    blocked = isBlocked(obstructions, nextCursor)
+    if (blocked) {
+      console.log(nextCursor, 'is blocked')
+    }
+
+    if (!blocked) {
+      cursor = nextCursor
+      ledger.add(`${cursor[0]},${cursor[1]}`)
+    }
+
+    if (cursor[0] < 0 || cursor[0] > max[0] || cursor[1] < 0 || cursor[1] > max[1]) {
+      console.log({ cursor })
+      end = true;
+      break;
+    }
+  }
+
+  if (end) {
+    console.log('fin')
+    return;
+  }
+
+  // rotate vector 90 degrees and return
+  vector = rotateRight(vector)
+  console.log('rotate')
+
+  console.log('do it again')
+  toCollision(obstructions, cursor, vector, ledger, max)
+}
+
+function applyVector([vY, vX], [cY, cX]) {
+  return [vY + cY, vX + cX]
+}
+
+function rotateRight([vY, vX]) {
+  return [vX, -vY]
+}
+
+function isBlocked(obstructions, [cY, cX]) {
+  let result = false
+
+  for (const [oY, oX] of obstructions) {
+    if (cY === oY && cX === oX) {
+      result = true
+      break
+    }
+  }
+
+  return result
 }
