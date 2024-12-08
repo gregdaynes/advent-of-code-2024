@@ -1,40 +1,34 @@
 export function p1a (input, part2 = false) {
-  const rows = input.split('\n')
-    .map(row => row.split(/[^\d]+/))
-    .map(row => row.map(Number))
+  const rows = [0,
+    ...input.split('\n').map(row => row.split(/[^\d]+/).map(Number))]
 
-  const operations = [add, multiply]
-  if (part2) operations.push(combine)
+  const options = [add, multiply]
+  if (part2) {
+    options.push(combine)
+  }
 
-  function perform (target, ...numbers) {
-    // early exit if operation exceeds target
-    if (numbers[0] > target) return 0
+  return rows.reduce((acc, row) =>
+    acc += applyOperations(options, ...row))
+}
 
-    // if only a single number, check
-    if (numbers.length === 1) {
-      return numbers[0] === target ? numbers[0] : 0
-    }
-
-    for (const operation of operations) {
-      const operationResult = operation(...numbers)
-      const rest = numbers.slice(2)
-
-      const result = perform(
-        target,
-        operationResult,
-        ...rest
-      )
-
-      if (result) {
-        return result
-      }
-    }
-
+function applyOperations (opts, test, head, next, ...rest) {
+  // early exit if previous operation result exceeds test
+  if (head > test) {
     return 0
   }
 
-  return rows.reduce((acc, numbers) =>
-    acc += perform(...numbers), 0)
+  // if no more numbers to apply check gainst head
+  if (!next) {
+    return head === test ? head : 0
+  }
+
+  for (const fn of opts) {
+    if (applyOperations(opts, test, fn(head, next), ...rest)) {
+      return test
+    }
+  }
+
+  return 0
 }
 
 function add(a, b) {
