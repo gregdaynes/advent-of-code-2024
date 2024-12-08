@@ -6,17 +6,12 @@ export function p1a (input, part2 = false) {
   const operations = [add, multiply]
   if (part2) operations.push(combine)
 
-  let sum = 0
-  for (const row of rows) {
-    const test = row[0]
-    const result = perform(operations, ...row)
+  return rows.reduce((acc, [test, ...rest]) => {
+    const result = perform(operations, test, ...rest)
+    if (result) acc += result
 
-    if (result === test) {
-      sum += test
-    }
-  }
-
-  return sum
+    return acc
+  }, 0)
 }
 
 function perform (operations, target, ...numbers) {
