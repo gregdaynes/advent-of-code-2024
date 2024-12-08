@@ -6,18 +6,14 @@ export function p1a (input, part2 = false) {
   const operations = [add, multiply]
   if (part2) operations.push(combine)
 
-  return rows.reduce((acc, [test, ...rest]) => {
-    const result = perform(operations, test, ...rest)
-    if (result) acc += result
-
-    return acc
-  }, 0)
+  return rows.reduce((acc, numbers) =>
+    acc += perform(operations, ...numbers), 0)
 }
 
 function perform (operations, target, ...numbers) {
   // early exit if operation exceeds target
   if (numbers[0] > target) {
-    return false
+    return 0
   }
 
   // if only a single number, check
@@ -35,7 +31,7 @@ function perform (operations, target, ...numbers) {
     }
   }
 
-  return false
+  return 0
 }
 
 function add(a, b) {
