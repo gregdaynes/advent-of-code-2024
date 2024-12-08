@@ -1,60 +1,49 @@
 export function p1a (input) {
   const rows = input.split('\n')
-  const validTests = new Set()
+    .map(row => row.split(/[^\d]+/))
+    .map(row => row.map(Number))
 
+  let sum = 0
   for (const row of rows) {
-    let [testValue, sequence] = row.split(':')
-    const values = sequence.trim().split(' ').map(BigInt)
-    testValue = Number(testValue)
+    const x = perform(...row)
 
-    const operators = generateOperators(values.length - 1)
-
-    for (const operatorSet of operators) {
-      const x = values.flatMap((v, i) => {
-        if (operatorSet[i]) {
-          return [v, operatorSet[i]]
-        }
-
-        return v
-      })
-
-      const y = x.reduce((acc, v) => {
-        if (typeof v === 'bigint') {
-          return eval(`${acc} ${v}`)
-        }
-
-        return `${acc} ${v}`
-      }, '')
-
-      if (testValue === y) {
-        validTests.add(testValue)
-      }
+    if (x === row[0]) {
+      sum += row[0]
     }
   }
 
-  const result = [...validTests].reduce((acc, value) => {
-    return acc + value
-  })
-
-  return result
+  return sum
 }
 
-function generateOperators(count) {
-  const chars = ['+', '*'];
-  var max = Math.pow(2, count);
-  const operators = []
+function perform (target, ...numbers) {
+  const operations = [add, multiply]
 
-  for (var i = 0; i < max; i++) {
-    let s = []
-    let x = i;
-
-    while (s.length < count) {
-      s.push(chars[x & 1]);
-      x >>= 1;
-    }
-
-    operators.push(s)
+  // early exit if operation exceeds target
+  if (numbers[0] > target) {
+    return false
   }
 
-  return operators
+  // if only a single number, check
+  if (numbers.length === 1) {
+    return numbers[0] === target
+  }
+
+  for (const operation of operations) {
+    const result = operation(numbers[0], numbers[1])
+    const recurse = perform(target, result, ...numbers.slice(2))
+
+    if (recurse) {
+      return target
+    }
+  }
+
+  return false
+}
+
+function add(a, b) {
+  return a + b
+}
+
+function multiply(a, b) {
+  return a * b
 }

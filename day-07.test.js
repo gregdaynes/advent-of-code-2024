@@ -15,7 +15,7 @@ test("day seven", async (t) => {
 
     await t.test("part 1 actual data", () => {
       const results = p1a(inputFile);
-      assert.equal(results, 0);
+      assert.equal(results, 2314935962622);
     });
   });
 });
