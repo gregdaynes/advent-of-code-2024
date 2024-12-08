@@ -18,16 +18,22 @@ function perform (operations, target, ...numbers) {
 
   // if only a single number, check
   if (numbers.length === 1) {
-    return numbers[0] === target
+    return numbers[0] === target ? numbers[0] : 0
   }
 
   for (const operation of operations) {
+    const operationResult = operation(...numbers)
     const rest = numbers.slice(2)
-    const operationResult = operation(numbers[0], numbers[1])
-    const result = perform(operations, target, operationResult, ...rest)
+
+    const result = perform(
+      operations,
+      target,
+      operationResult,
+      ...rest
+    )
 
     if (result) {
-      return target
+      return result
     }
   }
 
