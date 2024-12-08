@@ -1,9 +1,10 @@
-export function p1a (input) {
+export function p1a (input, part2 = false) {
   const rows = input.split('\n')
     .map(row => row.split(/[^\d]+/))
     .map(row => row.map(Number))
 
   const operations = [add, multiply]
+  if (part2) operations.push(combine)
 
   let sum = 0
   for (const row of rows) {
@@ -41,30 +42,6 @@ function perform (operations, target, ...numbers) {
 
   return false
 }
-
-// --------------------------------------------------
-
-export function p2a (input) {
-  const rows = input.split('\n')
-    .map(row => row.split(/[^\d]+/))
-    .map(row => row.map(Number))
-
-  const operations = [add, multiply, combine]
-
-  let sum = 0
-  for (const row of rows) {
-    const test = row[0]
-    const result = perform(operations, ...row)
-
-    if (result === test) {
-      sum += test
-    }
-  }
-
-  return sum
-}
-
-// -------------------------------------------------
 
 function add(a, b) {
   return a + b

@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { p1a, p2a } from "./day-07.js";
+import { p1a } from "./day-07.js";
 
 test("day seven", async (t) => {
   const input = readFileSync("07-sample-input.txt", "utf8").trim();
@@ -21,12 +21,12 @@ test("day seven", async (t) => {
 
   await t.test("part 2", async (t) => {
     await t.test("part 2 sample data", () => {
-      const results = p2a(input);
+      const results = p1a(input, true);
       assert.equal(results, 11387);
     });
 
     await t.test("part 2 actual data", () => {
-      const results = p2a(inputFile);
+      const results = p1a(inputFile, true);
       assert.equal(results, 401477450831495);
     });
   });
